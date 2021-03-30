@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PhotoShaker</string>
+    <string name="counter">0</string>
+</resources>
