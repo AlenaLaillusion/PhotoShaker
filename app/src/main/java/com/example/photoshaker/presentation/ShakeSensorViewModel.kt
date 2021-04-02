@@ -43,7 +43,7 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
 
             val curTime = System.currentTimeMillis()
 
-            if ((curTime - lastUpdate) > 10000) {
+            if ((curTime - lastUpdate) > DIFF) {
                 lastUpdate = curTime
                 val speed = Math.sqrt(Math.pow(x.toDouble(), 2.0) +
                         Math.pow(y.toDouble(), 2.0) +
@@ -62,3 +62,4 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
     }
 }
 const val SHAKE_THRESHOLD = 1
+const val DIFF = 8000

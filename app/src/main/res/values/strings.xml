@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">PhotoShaker</string>
     <string name="counter">0</string>
+    <string name="saved_photos">show saved photos</string>
+    <string name="close">close app</string>
+    <string name="error_photos_mesage_Db">Error loading photos data from DataBase</string>
+
+    <string name="base_url">https://unsplash.com/photos/</string>
 </resources>

@@ -8,13 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.photoshaker.api.PhotoApi
 import com.example.photoshaker.api.mapPhoto
+import com.example.photoshaker.cache.PhotoRepositoryImpl
 import com.example.photoshaker.data.Photo
 import com.example.photoshaker.domain.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FragmentPhotoViewModel(private val photoApi: PhotoApi) : ViewModel() {
+class FragmentPhotoViewModel(private val photoApi: PhotoApi,  private val repositoryImpl: PhotoRepositoryImpl) : ViewModel() {
 
     lateinit var timer: CountDownTimer
 
@@ -63,6 +64,10 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi) : ViewModel() {
     suspend fun loadingPhotoApi() {
         val networkPhoto = loadingPhoto()
         _photoData.value = networkPhoto
+
+        repositoryImpl.updatePhotoCache(networkPhoto)
+
+        _state.value = State.Success()
     }
 
      suspend fun loadingPhoto(): Photo =

@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.example.photoshaker.R
 import com.example.photoshaker.data.Photo
 import com.example.photoshaker.databinding.FragmentPhotoBinding
 import com.example.photoshaker.domain.State
@@ -47,6 +45,7 @@ class FragmentPhoto : Fragment() {
                 setObservers()
             }
         })
+
     }
 
     private fun setObservers() {
@@ -81,15 +80,10 @@ class FragmentPhoto : Fragment() {
             Glide.with(requireContext())
                 .load(photo.urls)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .apply(imageOption)
+                .apply(SavedPhotosViewHolder.imageOption)
                 .into(binding.ivPhoto)
         }
     }
-
-    val imageOption = RequestOptions()
-        .placeholder(R.drawable.bg)
-        .fallback(R.drawable.bg)
-        .centerCrop()
 
     override fun onResume() {
         super.onResume()
