@@ -15,7 +15,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FragmentPhotoViewModel(private val photoApi: PhotoApi,  private val repositoryImpl: PhotoRepositoryImpl) : ViewModel() {
+class FragmentPhotoViewModel(private val photoApi: PhotoApi,
+                             private val repositoryImpl: PhotoRepositoryImpl
+) : ViewModel() {
 
     lateinit var timer: CountDownTimer
 
@@ -25,11 +27,14 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,  private val reposi
     private val _photoData = MutableLiveData<Photo>()
     val photoData: LiveData<Photo> get() = _photoData
 
+    private val _photoLast = MutableLiveData<Photo>()
+    val photoLast: LiveData<Photo> get() = _photoLast
+
     private val _countTimer = MutableLiveData<Long>()
     val countTimer: LiveData<Long> get() = _countTimer
 
     init  {
-        StartDownTimer()
+        loadingLastPhoto()
     }
 
     fun StartDownTimer() {
@@ -56,19 +61,28 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,  private val reposi
         timer.start()
     }
 
+    fun loadingLastPhoto() {
+        viewModelScope.launch {
+            val lastUrl = loadLastPhoto()
+            _photoLast.value = lastUrl
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         timer.cancel()
     }
 
     suspend fun loadingPhotoApi() {
-        val networkPhoto = loadingPhoto()
+       val networkPhoto = loadingPhoto()
         _photoData.value = networkPhoto
 
         repositoryImpl.updatePhotoCache(networkPhoto)
-
-        _state.value = State.Success()
     }
+
+     suspend fun loadLastPhoto() : Photo = withContext(Dispatchers.IO) {
+         repositoryImpl.getLastPhoto()
+     }
 
      suspend fun loadingPhoto(): Photo =
         withContext(Dispatchers.IO) {

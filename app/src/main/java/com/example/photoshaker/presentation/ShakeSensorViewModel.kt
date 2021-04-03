@@ -6,6 +6,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.photoshaker.App
@@ -13,7 +14,7 @@ import com.example.photoshaker.App
 class ShakeSensorViewModel : ViewModel(), SensorEventListener {
 
     private val _shakeSensorLiveData = MutableLiveData<Boolean>()
-    val shakeSensorLiveData get() = _shakeSensorLiveData
+    val shakeSensorLiveData: LiveData<Boolean> get() = _shakeSensorLiveData
 
     private lateinit var sensorManager: SensorManager
 
@@ -45,9 +46,9 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
 
             if ((curTime - lastUpdate) > DIFF) {
                 lastUpdate = curTime
-                val speed = Math.sqrt(Math.pow(x.toDouble(), 2.0) +
-                        Math.pow(y.toDouble(), 2.0) +
-                        Math.pow(z.toDouble(), 2.0)) - SensorManager.GRAVITY_EARTH
+                val speed = Math.sqrt(Math.pow(x.toDouble(), POW) +
+                        Math.pow(y.toDouble(), POW) +
+                        Math.pow(z.toDouble(), POW)) - SensorManager.GRAVITY_EARTH
 
                 val isShake = if (speed > SHAKE_THRESHOLD) true else false
 
@@ -61,5 +62,6 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
         sensorManager.unregisterListener(this)
     }
 }
-const val SHAKE_THRESHOLD = 1
-const val DIFF = 8000
+const val SHAKE_THRESHOLD = 1.5
+const val POW = 2.0
+const val DIFF = 3000

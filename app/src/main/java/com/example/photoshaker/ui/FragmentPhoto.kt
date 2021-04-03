@@ -39,13 +39,16 @@ class FragmentPhoto : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.photoLast.observe(viewLifecycleOwner, {
+            setPhotoData(it)
+        })
+
         shakeSensorViewModel.shakeSensorLiveData.observe(viewLifecycleOwner, {
             if(it) {
                 viewModel.StartDownTimer()
                 setObservers()
             }
         })
-
     }
 
     private fun setObservers() {
