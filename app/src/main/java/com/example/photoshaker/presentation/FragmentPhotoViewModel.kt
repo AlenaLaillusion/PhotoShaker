@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.photoshaker.R
 import com.example.photoshaker.api.PhotoApi
 import com.example.photoshaker.api.mapPhoto
 import com.example.photoshaker.cache.PhotoRepositoryImpl
@@ -32,6 +33,7 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
 
     private val _countTimer = MutableLiveData<Long>()
     val countTimer: LiveData<Long> get() = _countTimer
+
 
     init  {
         loadingLastPhoto()
@@ -61,11 +63,18 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
         timer.start()
     }
 
-    fun loadingLastPhoto() {
-        viewModelScope.launch {
-            val lastUrl = loadLastPhoto()
-            _photoLast.value = lastUrl
-        }
+   fun loadingLastPhoto() {
+       viewModelScope.launch {
+           try {
+               val lastUrl = loadLastPhoto()
+                   _photoLast.value = lastUrl
+
+           } catch (e: Exception) {
+               Log.e(
+                   FragmentPhotoViewModel::class.java.simpleName,
+                   R.string.error_photos_mesage_Db.toString() + e.message)
+           }
+       }
     }
 
     override fun onCleared() {
@@ -74,13 +83,19 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
     }
 
     suspend fun loadingPhotoApi() {
-       val networkPhoto = loadingPhoto()
-        _photoData.value = networkPhoto
+        try {
+            val networkPhoto = loadingPhoto()
+            _photoData.value = networkPhoto
 
-        repositoryImpl.updatePhotoCache(networkPhoto)
+            repositoryImpl.updatePhotoCache(networkPhoto)
+        } catch (e: Exception) {
+            Log.e(FragmentPhotoViewModel::class.java.simpleName,
+                R.string.error_photos_mesage_Api.toString() + e.message)
+        }
     }
 
-     suspend fun loadLastPhoto() : Photo = withContext(Dispatchers.IO) {
+    suspend fun loadLastPhoto() : Photo =
+        withContext(Dispatchers.IO) {
          repositoryImpl.getLastPhoto()
      }
 
