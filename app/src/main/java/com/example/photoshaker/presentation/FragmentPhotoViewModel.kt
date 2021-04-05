@@ -20,7 +20,7 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
                              private val repositoryImpl: PhotoRepositoryImpl
 ) : ViewModel() {
 
-    lateinit var timer: CountDownTimer
+    private var timer: CountDownTimer? = null
 
     private val _state = MutableLiveData<State>(State.Init())
     val state: LiveData<State> get() = _state
@@ -60,7 +60,7 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
                 }
             }
         }
-        timer.start()
+        timer?.start()
     }
 
    fun loadingLastPhoto() {
@@ -79,7 +79,7 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
 
     override fun onCleared() {
         super.onCleared()
-        timer.cancel()
+        timer?.cancel()
     }
 
     suspend fun loadingPhotoApi() {
