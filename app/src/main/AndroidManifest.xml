@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.photoshaker">
 
+    <!-- todo Review's hint: looka like that we not need it here, cos of sdk-versions defined in gradle-files-->
     <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="30" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

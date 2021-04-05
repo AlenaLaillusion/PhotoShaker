@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
- object RetrofitModule {
+object RetrofitModule {
     private val client = OkHttpClient().newBuilder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .addInterceptor(PhotoApiHeaderInterceptor())
@@ -19,7 +19,7 @@ import retrofit2.Retrofit
     }
 
     @Suppress("EXPERIMENTAL_API_USAGE")
-     val retrofit: Retrofit = Retrofit.Builder()
+    val retrofit: Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))

@@ -18,6 +18,7 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
 
+    // todo Review's hint: can be private, IDE hints about it ;)
     var lastUpdate = 0L
 
     fun setUpSensor() {
@@ -37,7 +38,7 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if(event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+        if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
             val x = event.values[0]
             val y = event.values[1]
             val z = event.values[2]
@@ -46,22 +47,31 @@ class ShakeSensorViewModel : ViewModel(), SensorEventListener {
 
             if ((curTime - lastUpdate) > DIFF) {
                 lastUpdate = curTime
-                val speed = Math.sqrt(Math.pow(x.toDouble(), POW) +
-                        Math.pow(y.toDouble(), POW) +
-                        Math.pow(z.toDouble(), POW)) - SensorManager.GRAVITY_EARTH
+                val speed = Math.sqrt(
+                    Math.pow(x.toDouble(), POW) +
+                            Math.pow(y.toDouble(), POW) +
+                            Math.pow(z.toDouble(), POW)
+                ) - SensorManager.GRAVITY_EARTH
 
+                // todo Review's hint: not need to use so long 'if' condition ;)
                 val isShake = if (speed > SHAKE_THRESHOLD) true else false
 
                 _shakeSensorLiveData.value = isShake
 
-                Log.d(ShakeSensorViewModel::class.java.simpleName, "x= $x, curTime= $curTime, isShake= $isShake, speed= $speed")
+                Log.d(
+                    ShakeSensorViewModel::class.java.simpleName,
+                    "x= $x, curTime= $curTime, isShake= $isShake, speed= $speed"
+                )
             }
         }
     }
+
     fun stopSensor() {
         sensorManager.unregisterListener(this)
     }
 }
+
+// todo Review's hint: it's not required but I would prefer to see this constants in the top of the class/file
 const val SHAKE_THRESHOLD = 1.5
 const val POW = 2.0
 const val DIFF = 3000

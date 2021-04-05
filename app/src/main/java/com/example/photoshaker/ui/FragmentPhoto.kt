@@ -39,8 +39,9 @@ class FragmentPhoto : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        // todo Review's hint: deprecated, can be fixed via Observer {} in the function
         viewModel.photoLast.observe(viewLifecycleOwner, {
+            // todo Review's hint: it this case "it" can't be null inside this function
             if(it != null) {
                 setPhotoData(it)
             }
@@ -86,6 +87,7 @@ class FragmentPhoto : Fragment() {
             Glide.with(requireContext())
                 .load(photo.urls)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                // todo Review's hint: looks like SavedPhotosViewHolder not exist in the project :(
                 .apply(SavedPhotosViewHolder.imageOption)
                 .into(binding.ivPhoto)
         }

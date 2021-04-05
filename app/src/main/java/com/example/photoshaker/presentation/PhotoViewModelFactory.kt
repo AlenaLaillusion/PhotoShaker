@@ -7,12 +7,13 @@ import com.example.photoshaker.cache.PhotoRepositoryImpl
 import kotlinx.serialization.ExperimentalSerializationApi
 import retrofit2.create
 
-class PhotoViewModelFactory: ViewModelProvider.Factory{
+class PhotoViewModelFactory : ViewModelProvider.Factory {
     @ExperimentalSerializationApi
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
         FragmentPhotoViewModel::class.java -> FragmentPhotoViewModel(
             photoApi = RetrofitModule.retrofit.create(),
+            // todo Review's hint: looks like that PhotoRepositoryImpl not exist in the project :(
             repositoryImpl = PhotoRepositoryImpl()
         )
         else -> throw IllegalArgumentException("$modelClass is not registered ViewModel")

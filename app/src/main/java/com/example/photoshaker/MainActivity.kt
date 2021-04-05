@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
+                // todo Review's hint: for fragment creation usually is used companion function "newInstance()". FragmentPhoto.Companion.newInstance(some args..)
                 .add(R.id.container, FragmentPhoto())
                 .commit()
         }
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
     fun openFragment() {
         supportFragmentManager.beginTransaction()
+            // todo Review's hint: FragmentSavedPhotos not exist in the project :(
             .add(R.id.container, FragmentSavedPhotos())
             .addToBackStack(TAG)
             .commit()

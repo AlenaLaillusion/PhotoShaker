@@ -16,8 +16,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FragmentPhotoViewModel(private val photoApi: PhotoApi,
-                             private val repositoryImpl: PhotoRepositoryImpl
+class FragmentPhotoViewModel(
+    private val photoApi: PhotoApi,
+    // todo Review's hint: looks like that PhotoRepositoryImpl not exist in the project :(
+    private val repositoryImpl: PhotoRepositoryImpl
 ) : ViewModel() {
 
     lateinit var timer: CountDownTimer
@@ -35,16 +37,18 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
     val countTimer: LiveData<Long> get() = _countTimer
 
 
-    init  {
+    init {
         loadingLastPhoto()
     }
 
+    // todo Review's hint: first letter is uppercase. Should be lowercase regarding kotlin style naming. Or I missed smth? :)
     fun StartDownTimer() {
-        timer = object: CountDownTimer(COUNT_DOWN_TIMER, ONE_SECOND) {
+        timer = object : CountDownTimer(COUNT_DOWN_TIMER, ONE_SECOND) {
             override fun onTick(millisUntilFinished: Long) {
                 _state.value = State.Start()
                 _countTimer.value = millisUntilFinished / ONE_SECOND
             }
+
             override fun onFinish() {
                 _state.value = State.Stop()
                 _countTimer.value = DONE
@@ -55,7 +59,7 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
                         loadingPhotoApi()
                     } catch (e: Exception) {
                         _state.value = State.Error()
-                        Log.e(FragmentPhotoViewModel::class.java.simpleName, "Error  ${e.message}" )
+                        Log.e(FragmentPhotoViewModel::class.java.simpleName, "Error  ${e.message}")
                     }
                 }
             }
@@ -63,18 +67,19 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
         timer.start()
     }
 
-   fun loadingLastPhoto() {
-       viewModelScope.launch {
-           try {
-               val lastUrl = loadLastPhoto()
-                   _photoLast.value = lastUrl
+    fun loadingLastPhoto() {
+        viewModelScope.launch {
+            try {
+                val lastUrl = loadLastPhoto()
+                _photoLast.value = lastUrl
 
-           } catch (e: Exception) {
-               Log.e(
-                   FragmentPhotoViewModel::class.java.simpleName,
-                   R.string.error_photos_mesage_Db.toString() + e.message)
-           }
-       }
+            } catch (e: Exception) {
+                Log.e(
+                    FragmentPhotoViewModel::class.java.simpleName,
+                    R.string.error_photos_mesage_Db.toString() + e.message
+                )
+            }
+        }
     }
 
     override fun onCleared() {
@@ -89,17 +94,19 @@ class FragmentPhotoViewModel(private val photoApi: PhotoApi,
 
             repositoryImpl.updatePhotoCache(networkPhoto)
         } catch (e: Exception) {
-            Log.e(FragmentPhotoViewModel::class.java.simpleName,
-                R.string.error_photos_mesage_Api.toString() + e.message)
+            Log.e(
+                FragmentPhotoViewModel::class.java.simpleName,
+                R.string.error_photos_mesage_Api.toString() + e.message
+            )
         }
     }
 
-    suspend fun loadLastPhoto() : Photo =
+    suspend fun loadLastPhoto(): Photo =
         withContext(Dispatchers.IO) {
-         repositoryImpl.getLastPhoto()
-     }
+            repositoryImpl.getLastPhoto()
+        }
 
-     suspend fun loadingPhoto(): Photo =
+    suspend fun loadingPhoto(): Photo =
         withContext(Dispatchers.IO) {
             val photoResponce = photoApi.getPhotoRandom()
             mapPhoto(photoResponce)
